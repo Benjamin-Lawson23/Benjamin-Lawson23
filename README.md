@@ -1,4 +1,4 @@
-<h1>Hi, I'm Benjamin, an <a href="https://linkedin.com/in/Josh">IT Professional</a>:floppy_disk:</h1>
+<h1>Hi, I'm Benjamin, an <a href="https://linkedin.com/in/Josh">IT Professional</a> :floppy_disk:</h1>
 
 <h2>Information Technology Projects:</h2>
 
