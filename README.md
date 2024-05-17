@@ -3,7 +3,7 @@
 <h2>Information Technology Projects:</h2>
 
 - <b>Cisco Packet Tracer</b>
-  - [osTicket: Prerequisites and Installation](https://github.com/Benjamin-Lawson23/osticket-prereqs)
+  - [Basic Subnetting Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/osticket-prereqs)
 - <b>osTicket (Help Desk Ticketing System)</b>
   - [osTicket: Prerequisites and Installation](https://github.com/Benjamin-Lawson23/osticket-prereqs)
 - <b>Microsoft Azure</b>
