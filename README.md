@@ -4,6 +4,7 @@
 
 - <b>Cisco Packet Tracer</b>
   - [Basic Subnetting Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/basic-subnetting)
+  - [ROAS Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/configuring-ROAS)
 - <b>osTicket (Help Desk Ticketing System)</b>
   - [osTicket: Prerequisites and Installation](https://github.com/Benjamin-Lawson23/osticket-prereqs)
 - <b>Microsoft Azure</b>
