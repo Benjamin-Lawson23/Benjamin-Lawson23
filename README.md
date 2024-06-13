@@ -7,6 +7,7 @@
   - [ROAS Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/configuring-ROAS)
 - <b>osTicket (Help Desk Ticketing System)</b>
   - [osTicket: Prerequisites and Installation](https://github.com/Benjamin-Lawson23/osticket-prereqs)
+  - [osTicket: Tickets and Ticket Lifecycle](https://github.com/Benjamin-Lawson23/osticket_ticket_lifecycle)
 - <b>Microsoft Azure</b>
   - [Azure Crash Course: Creating a Virtual Machine](https://github.com/Benjamin-Lawson23/create_Azure_virtual_machine)
   - [Configuring On-premises Active Directory within Azure VMs](https://github.com/Benjamin-Lawson23/configure-ad)
