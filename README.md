@@ -12,6 +12,8 @@
   - [Azure Crash Course: Creating a Virtual Machine](https://github.com/Benjamin-Lawson23/create_Azure_virtual_machine)
   - [Configuring On-premises Active Directory within Azure VMs](https://github.com/Benjamin-Lawson23/configure-ad)
   - [Network Security Groups (NSGs) and Inspecting Network Protocols](https://github.com/Benjamin-Lawson23/azure-network-protocols)
+- <b>Active Directory</b>
+- [Active Directory: Unlocking an Account and Resetting a Password](https://github.com/Benjamin-Lawson23/unlock-account-AD)
 
 <h2>Connect with me:</h2>
 
