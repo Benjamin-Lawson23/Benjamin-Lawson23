@@ -4,7 +4,7 @@
 
 - <b>Cisco Packet Tracer</b>
   - [Basic Subnetting Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/basic-subnetting)
-  - [Router on a Stick (ROAS) Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/configuring-ROAS)
+  - [Configuring Router on a Stick (ROAS) Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/configuring-ROAS)
 - <b>osTicket (Help Desk Ticketing System)</b>
   - [osTicket: Prerequisites and Installation](https://github.com/Benjamin-Lawson23/osticket-prereqs)
   - [osTicket: Tickets and Ticket Lifecycle](https://github.com/Benjamin-Lawson23/osticket_ticket_lifecycle)
