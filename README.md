@@ -14,7 +14,7 @@
   - [Network Security Groups (NSGs) and Inspecting Network Protocols](https://github.com/Benjamin-Lawson23/azure-network-protocols)
 - <b>Active Directory</b>
   - [Active Directory: Unlocking an Account and Resetting a Password](https://github.com/Benjamin-Lawson23/unlock-account-AD)
-  - [Active Directory: Troubleshooting tools for Group Policy Objects in Active Directory](https://github.com/Benjamin-Lawson23/ad-troubleshooting-tools)
+  - [Active Directory: Troubleshooting tools for Group Policy Objects (GPOs)](https://github.com/Benjamin-Lawson23/ad-troubleshooting-tools)
 <h2>Connect with me:</h2>
 
 [<img align="left" alt="Josh | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
