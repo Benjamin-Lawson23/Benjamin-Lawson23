@@ -15,6 +15,7 @@
 - <b>Active Directory</b>
   - [Unlocking an Account and Resetting a Password](https://github.com/Benjamin-Lawson23/unlock-account-AD)
   - [Troubleshooting tools for Group Policy Objects (GPOs)](https://github.com/Benjamin-Lawson23/ad-troubleshooting-tools)
+  - [Deploying a  Desktop Background to a Domain using a Group Policy Object (GPO)](https://github.com/Benjamin-Lawson23/deploying-desktop-background-gpo)
 <h2>Connect with me:</h2>
 
 [<img align="left" alt="Josh | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
