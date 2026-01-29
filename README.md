@@ -1,4 +1,4 @@
-<h1>:computer: <a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
+<h1>🖥️ <a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
 
 <h2>:floppy_disk: Information Technology Projects:</h2>
 
