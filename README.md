@@ -1,6 +1,6 @@
-<h1><a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :floppy_disk:</h1>
+<h1><a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
 
-<h2>Information Technology Projects:</h2>
+<h2>:floppy_disk: Information Technology Projects:</h2>
 
 - <b>Cisco Packet Tracer</b>
   - [(VIDEO) Basic Subnetting Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/basic-subnetting)
