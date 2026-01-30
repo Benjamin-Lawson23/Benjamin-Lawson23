@@ -2,7 +2,7 @@
 
 <h2>🛡️ Vulnerability Management Projects</h2>
 
-- <b>Vulnerability Program Implementation</b>
+- [Vulnerability Program Implementation](https://github.com/Benjamin-Lawson23/vulnerability-management-program-implementation/blob/main/README.md)
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
 
 <h2>🕵️‍♂️ Threat Hunting and Security Operations Projects</h2>
