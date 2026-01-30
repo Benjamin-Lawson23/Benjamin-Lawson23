@@ -1,15 +1,15 @@
 <h1>🖥️ <a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
 
-<h2>⚠️ Vulnerability Management Projects</h2>🛡️
+<h2>⚠️ Vulnerability Management Projects</h2>
 
 - <b>Vulnerability Program Implementation</b>
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
 
-<h2>🕵️‍♂️ Threat Hunting and Security Operations</h2>🎯
+<h2>🕵️‍♂️ Threat Hunting and Security Operations</h2>
 
 - <b>Threat Hunting Scenario (Tor Browser Usage)</b> 
 
-<h2>:floppy_disk: Information Technology Projects:</h2>🖨️
+<h2>:floppy_disk: Information Technology Projects:</h2>
 
 - <b>Cisco Packet Tracer</b>
   - [(VIDEO) Basic Subnetting Demo in Packet Tracer](https://github.com/Benjamin-Lawson23/basic-subnetting)
