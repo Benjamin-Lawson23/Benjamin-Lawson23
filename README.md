@@ -5,7 +5,7 @@
 - <b>Vulnerability Program Implementation</b>
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
 
-<h2>🕵️‍♂️ Threat Hunting and Security Operations</h2>
+<h2>🕵️‍♂️ Threat Hunting and Security Operations Projects</h2>
 
 - <b>Threat Hunting Scenario (Tor Browser Usage)</b> 
 
