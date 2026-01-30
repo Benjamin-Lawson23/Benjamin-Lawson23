@@ -1,4 +1,4 @@
-<h1>🖥️ <a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
+<h1><a href="https://www.linkedin.com/in/benjamin-lawson06/">Ben Lawson</a>'s IT and Cybersecurity Project Portfolio :lock:</h1>
 
 <h2>🛡️ Vulnerability Management Projects</h2>
 
