@@ -7,7 +7,7 @@
 
 <h2>🕵️‍♂️ Threat Hunting and Security Operations Projects</h2>
 
-- <b>Threat Hunting Scenario (Tor Browser Usage)</b> 
+- [Threat Hunting Scenario (Tor Browser Usage)](https://github.com/Benjamin-Lawson23/threat-hunt-scenario-tor) 
 
 <h2>:floppy_disk: Information Technology Projects:</h2>
 
