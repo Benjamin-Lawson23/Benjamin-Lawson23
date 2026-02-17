@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-    This PowerShell script checks whether the registry key DisableWindowsConsumerFeatures is set to 1 to disable Microsoft consumer experiences on Windows 10, and if not, it creates or updates the key to enforce that setting.
+    This PowerShell script checks whether the registry key DisableWindowsConsumerFeatures is set to 1 to disable Microsoft consumer experiences on Windows 10, 
+    and if not, it creates or updates the key to enforce that setting.
 
 .NOTES
     Author          : Benjamin Lawson
@@ -22,7 +23,7 @@
 .USAGE
     Put any usage instructions here.
     Example syntax:
-    PS C:\> .\STIG-ID-WN10-CC-000197).ps1 
+    PS C:\> .\STIG-ID-WN10-CC-000197.ps1 
 #>
 
 # Define registry details
