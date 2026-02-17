@@ -1,0 +1,70 @@
+<#
+.SYNOPSIS
+    This PowerShell script checks whether the registry key DisableWindowsConsumerFeatures is set to 1 to disable Microsoft consumer experiences on Windows 10, and if not, it creates or updates the key to enforce that setting.
+
+.NOTES
+    Author          : Benjamin Lawson
+    LinkedIn        : linkedin.com/in/benjamin-lawson06/
+    GitHub          : github.com/Benjamin-Lawson23
+    Date Created    : 2026-02-17
+    Last Modified   : 2026-02-17
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN10-AC-000005
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> .\STIG-ID-WN10-CC-000197).ps1 
+#>
+
+# Define registry details
+$RegHive = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
+$ValueName = "DisableWindowsConsumerFeatures"
+$ExpectedValue = 1
+
+# Function to check the registry setting
+function Check-RegistrySetting {
+    if (Test-Path $RegHive) {
+        $currentValue = Get-ItemProperty -Path $RegHive -Name $ValueName -ErrorAction SilentlyContinue | Select-Object -ExpandProperty $ValueName -ErrorAction SilentlyContinue
+        if ($currentValue -eq $ExpectedValue) {
+            Write-Host "Compliant: $ValueName is set correctly to $ExpectedValue."
+            return $true
+        } else {
+            Write-Host "Non-Compliant: $ValueName is not set correctly. Current value: $currentValue"
+            return $false
+        }
+    } else {
+        Write-Host "Non-Compliant: Registry path $RegHive does not exist."
+        return $false
+    }
+}
+
+# Function to apply the fix
+function Set-RegistrySetting {
+    if (-not (Test-Path $RegHive)) {
+        # Create the registry path if it doesn't exist
+        New-Item -Path $RegHive -Force | Out-Null
+        Write-Host "Created registry path: $RegHive"
+    }
+
+    # Set the registry value
+    Set-ItemProperty -Path $RegHive -Name $ValueName -Value $ExpectedValue -Type DWord
+    Write-Host "Configured $ValueName to $ExpectedValue."
+}
+
+# Main logic
+$compliant = Check-RegistrySetting
+if (-not $compliant) {
+    Write-Host "Applying the fix..."
+    Set-RegistrySetting
+    # Recheck
+    Check-RegistrySetting
+}
