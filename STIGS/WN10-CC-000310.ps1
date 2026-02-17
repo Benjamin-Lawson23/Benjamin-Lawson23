@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-   This PowerShell script checks whether the HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer\EnableUserControl registry value exists and is set to 0, and if it is missing or incorrectly configured, automatically creates or corrects it to enforce the security policy that prevents users from having control over Windows Installer installations.
+   This PowerShell script checks whether the HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer\EnableUserControl registry value exists and is set to 0, and if it is missing or 
+   incorrectly configured, automatically creates or corrects it to enforce the security policy that prevents users from having control over Windows Installer installations.
 
 .NOTES
     Author          : Benjamin Lawson
