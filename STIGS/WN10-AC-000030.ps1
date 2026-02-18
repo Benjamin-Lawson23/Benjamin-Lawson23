@@ -26,7 +26,6 @@
     PS C:\> .\STIG-ID-WN10-CC-000030.ps1 
 #>
 
-
 $desiredValue = 1
 $tempFile = "$env:TEMP\secpol.cfg"
 
