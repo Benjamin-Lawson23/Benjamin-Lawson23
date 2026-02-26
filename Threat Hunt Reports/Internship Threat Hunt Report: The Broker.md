@@ -72,6 +72,7 @@ DeviceProcessEvents
 | where InitiatingProcessFileName contains "daniel"
 | order by TimeGenerated asc
 ```
+<img width="1189" height="431" alt="TH Question 03" src="https://github.com/user-attachments/assets/c56e9930-764b-462e-aa2c-053fd7c0eb88" />
 
 Once running, the malware spawned a built‑in Windows program, **notepad.exe**, as a **child process**. Using a legitimate program as a decoy can help attackers blend in.
 
@@ -82,6 +83,7 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 | project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
 ```
+<img width="1135" height="426" alt="TH Question 04" src="https://github.com/user-attachments/assets/8fb631b7-3b93-4706-848d-ce3ddf94e5fd" />
 
 The suspicious ``notepad.exe`` instance ran with an unusual command line: ``notepad.exe ""`` (Notepad opened with an empty string). This suggests the process was likely used as a “host” or decoy, not for genuine text editing:
 
@@ -91,6 +93,7 @@ DeviceProcessEvents
 | where InitiatingProcessFileName contains "daniel"
 | order by TimeGenerated asc
 ```
+<img width="1211" height="56" alt="TH Question 05" src="https://github.com/user-attachments/assets/6f7a0834-a2ed-4eca-86e7-4676108413bd" />
 
 ## Command & Control – How the Attacker Phoned Home
 After gaining a foothold on as-pc1, the payload started talking to an attacker‑controlled server over the internet (command and control, or “C2”).
