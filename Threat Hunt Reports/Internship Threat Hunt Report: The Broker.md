@@ -96,9 +96,11 @@ DeviceProcessEvents
 <img width="1211" height="56" alt="TH Question 05" src="https://github.com/user-attachments/assets/6f7a0834-a2ed-4eca-86e7-4676108413bd" />
 
 ## Command & Control – How the Attacker Phoned Home
-After gaining a foothold on as-pc1, the payload started talking to an attacker‑controlled server over the internet (command and control, or “C2”).
+After gaining a foothold on **as-pc1**, the payload started talking to an attacker‑controlled server over the internet (command and control, or “C2”).
 
-C2 domain used: cdn.cloud-endpoint.net
+**C2 domain used:**
+
+``cdn.cloud-endpoint.net``
 
 KQL used to identify outbound connections related to the malicious CV process:
 
@@ -112,13 +114,17 @@ DeviceNetworkEvents
 
 The process responsible for this network traffic was the same malicious file:
 
-C2 process: daniel_richardson_cv.pdf.exe
+**C2 process:**
+
+``daniel_richardson_cv.pdf.exe``
 
 (Same query as above.)
 
-The attacker also used separate infrastructure to host additional payloads, pivoting to another workstation as-pc2 and identifying:
+The attacker also used separate infrastructure to host additional payloads, pivoting to another workstation **as-pc2** and identifying:
 
-Payload staging domain: sync.cloud-endpoint.net
+**Payload staging domain:**
+
+``sync.cloud-endpoint.net``
 
 KQL used on the second host:
 
