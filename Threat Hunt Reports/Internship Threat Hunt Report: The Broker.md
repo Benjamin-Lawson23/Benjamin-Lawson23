@@ -35,7 +35,7 @@ The attacker demonstrated structured, hands-on-keyboard activity consistent with
 # 3. Investigation Findings (With Context & KQL Evidence)
 
 ## 1. Initial Access – How the Attacker Got In
-The compromise began on workstation as-pc1 when a fake CV file was run: daniel_richardson_cv.pdf.exe. This file was disguised to look like a normal PDF but was actually a program.
+The compromise began on workstation as-pc1 when a fake CV file was run: `daniel_richardson_cv.pdf.exe`. This file was disguised to look like a normal PDF but was actually a program.
 
 ### KQL used to identify the first malicious file seen on the host:
 
