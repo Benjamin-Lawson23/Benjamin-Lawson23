@@ -496,6 +496,42 @@ The attacker achieved multi-system control and accessed sensitive payroll data.
 
 ---
 
-# Remediation 
+# Remediation Recommendations
 
-Immediate containment, credential resets, endpoint rebuilds, and domain-wide security review are required.
+## Immediate Actions
+
+- Reset all credentials (domain + local)
+
+- Remove AnyDesk from all hosts
+
+- Delete svc_backup account
+
+- Remove scheduled task
+
+- Rebuild compromised endpoints
+
+- Block cloud-endpoint.net domains
+
+## Medium-Term
+
+- Implement application allowlisting
+
+- Enforce MFA on all privileged accounts
+
+- Disable legacy admin protocols (WMIC, SMB where possible)
+
+- Deploy EDR tamper protection
+
+## Long-Term
+
+- User phishing awareness training
+
+- Strict file extension visibility policies
+
+- Regular credential hygiene audits
+
+- Continuous threat hunting program
+
+# Report Prepared By:
+Benjamin Lawson
+Assessment Date: February 25, 2026
