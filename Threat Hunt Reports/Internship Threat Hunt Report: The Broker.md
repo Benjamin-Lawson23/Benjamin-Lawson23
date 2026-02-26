@@ -61,7 +61,7 @@ DeviceProcessEvents
 | project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
 ```
 
-The fake CV was launched from explorer.exe, which indicates a normal user double‑clicked the file in Windows Explorer (e.g., from the Desktop or Downloads).
+The fake CV was launched from **explorer.exe**, which indicates a normal user double‑clicked the file in Windows Explorer (e.g., from the Desktop or Downloads).
 
 ```
 DeviceProcessEvents
@@ -70,7 +70,7 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 ```
 
-Once running, the malware spawned a built‑in Windows program, notepad.exe, as a child process. Using a legitimate program as a decoy can help attackers blend in.
+Once running, the malware spawned a built‑in Windows program, **notepad.exe**, as a **child process**. Using a legitimate program as a decoy can help attackers blend in.
 
 ```
 DeviceProcessEvents
