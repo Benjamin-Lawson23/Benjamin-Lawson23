@@ -188,17 +188,22 @@ Before moving further, the attacker gathered information about the environment.
 
 They first confirmed which account they were running as, using the command:
 
-User context command: whoami
+**User context command:**
+
+``whoami``
 
 ```
 DeviceProcessEvents
 | where DeviceName == "as-pc1"
 | where InitiatingProcessCommandLine contains “whoami"
 ```
+<img width="1198" height="77" alt="TH Question 11" src="https://github.com/user-attachments/assets/60a8cbc4-6e38-4c18-a361-b11955ead14c" />
 
 They then enumerated network resources (shared folders on the network) with:
 
-Network enumeration command: net.exe view
+**Network enumeration command:**
+
+``net.exe view``
 
 ```
 DeviceProcessEvents
@@ -206,8 +211,9 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "net"
 | project TimeGenerated, AccountName, InitiatingProcessCommandLine, ProcessCommandLine
 ```
+<img width="867" height="59" alt="TH Question 12" src="https://github.com/user-attachments/assets/9b94f32a-6731-4866-a09a-73dc250f38fe" />
 
-To understand which users had elevated rights, they queried local administrator group membership, targeting the Administrators group:
+To understand which users had elevated rights, they queried local administrator group membership, targeting the **Administrators** group:
 
 ```
 DeviceProcessEvents
@@ -217,6 +223,7 @@ DeviceProcessEvents
          InitiatingProcessFileName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1128" height="218" alt="TH Question 13" src="https://github.com/user-attachments/assets/ed073793-4387-4c61-88d5-d8f725354ca5" />
 
 ## Persistence – Ensuring They Could Get Back In
 The attacker deployed a legitimate remote‑access tool (remote desktop/control software) to maintain ongoing access:
