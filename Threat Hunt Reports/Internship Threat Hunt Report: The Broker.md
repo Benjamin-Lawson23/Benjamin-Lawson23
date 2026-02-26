@@ -1,4 +1,4 @@
-# Threat Hunt Report  
+# The Broker: Threat Hunt Report  
 ## Suspected Intrusion Investigation  
 
 **Client:** Ashford Sterling Recruitment  
