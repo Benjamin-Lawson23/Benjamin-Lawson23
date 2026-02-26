@@ -34,7 +34,7 @@ The attacker demonstrated structured, hands-on-keyboard activity consistent with
 
 # 3. Investigation Findings (With Context & KQL Evidence)
 
-## 1. Initial Access – How the Attacker Got In
+## Initial Access – How the Attacker Got In
 The compromise began on workstation **as-pc1** when a fake CV file was run: ``daniel_richardson_cv.pdf.exe``. This file was disguised to look like a normal PDF but was actually a program.
 
 ### KQL used to identify the first malicious file seen on the host:
@@ -89,7 +89,7 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 ```
 
-## 2. Command & Control – How the Attacker Phoned Home
+## Command & Control – How the Attacker Phoned Home
 After gaining a foothold on as-pc1, the payload started talking to an attacker‑controlled server over the internet (command and control, or “C2”).
 
 C2 domain used: cdn.cloud-endpoint.net
@@ -123,7 +123,7 @@ DeviceNetworkEvents
 | order by TimeGenerated desc
 ```
 
-## 3. Credential Access – Stealing Passwords and System Secrets
+## Credential Access – Stealing Passwords and System Secrets
 The attacker attempted to steal sensitive system secrets from the local machine’s registry, which can be used to crack passwords offline.
 
 They used the Windows tool reg.exe with the save command to dump credential‑related hives:
@@ -163,7 +163,7 @@ DeviceFileEvents
 | order by TimeGenerated desc
 ```
 
-## 4. Discovery – Understanding the Environment
+## Discovery – Understanding the Environment
 Before moving further, the attacker gathered information about the environment.
 
 They first confirmed which account they were running as, using the command:
@@ -198,7 +198,7 @@ DeviceProcessEvents
 | order by TimeGenerated desc
 ```
 
-## 5. Persistence – Ensuring They Could Get Back In
+## Persistence – Ensuring They Could Get Back In
 The attacker deployed a legitimate remote‑access tool (remote desktop/control software) to maintain ongoing access:
 
 Remote tool installed: AnyDesk.exe
@@ -338,7 +338,7 @@ DeviceFileEvents
 | project TimeGenerated, DeviceName, FileName, SHA256
 ```
 
-## 6. Lateral Movement – Spreading to Other Systems
+## Lateral Movement – Spreading to Other Systems
 The attacker tried several remote execution tools from as-pc1, but some attempts failed:
 
 Failed execution tools tried: WMIC.exe, PsExec.exe
@@ -391,7 +391,7 @@ DeviceLogonEvents
 ```
 
 
-## 7. Data Access & Exfiltration Preparation – What They Touched
+## Data Access & Exfiltration Preparation – What They Touched
 On the file server, the attacker accessed a sensitive finance‑related document:
 
 Sensitive document accessed: BACS_Payments_Dec2025.ods
@@ -452,7 +452,7 @@ DeviceFileEvents
 | order by TimeGenerated desc
 ```
 
-## 8. Defense Evasion & In‑Memory Activity – Hiding Their Tracks
+## Defense Evasion & In‑Memory Activity – Hiding Their Tracks
 To cover their tracks, the attacker cleared important Windows event logs:
 
 Logs cleared (examples): System, Security
@@ -528,7 +528,7 @@ This sequence confirms a full intrusion lifecycle on Ashford Sterling Recruitmen
 
 ---
 
-# MITRE ATT&CK Mapping
+# 5. MITRE ATT&CK Mapping
 
 | Tactic | Technique | ID |
 |--------|-----------|----|
@@ -546,7 +546,7 @@ This sequence confirms a full intrusion lifecycle on Ashford Sterling Recruitmen
 
 ---
 
-# Overall Assessment
+# 6. Overall Assessment
 
 This was a deliberate, structured intrusion involving:
 
@@ -562,7 +562,7 @@ The attacker achieved multi-system control and accessed sensitive payroll data.
 
 ---
 
-# Remediation Recommendations
+# 7. Remediation Recommendations
 
 ## Immediate Actions
 
