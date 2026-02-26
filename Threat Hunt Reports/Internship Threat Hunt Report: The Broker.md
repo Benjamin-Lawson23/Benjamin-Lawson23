@@ -531,7 +531,3 @@ The attacker achieved multi-system control and accessed sensitive payroll data.
 - Regular credential hygiene audits
 
 - Continuous threat hunting program
-
-# Report Prepared By:
-Benjamin Lawson
-## Assessment Date: February 25, 2026
