@@ -47,7 +47,9 @@ DeviceProcessEvents
 ```
 The malicious file’s unique fingerprint (SHA256 hash) was:
 
-Initial payload hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+**Initial payload hash:** 
+
+``48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5``
 
 KQL used to retrieve the hash of the payload initiated by the fake CV:
 
