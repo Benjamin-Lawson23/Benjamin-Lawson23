@@ -157,6 +157,7 @@ DeviceProcessEvents
 | order by TimeGenerated desc
 ```
 
+
 The stolen data was saved under a public directory on **as-pc1** (local staging) before being sent out. The exact path was identified by focusing on new or modified files on the host:
 
 ```
@@ -180,6 +181,7 @@ DeviceFileEvents
          InitiatingProcessFileName, FolderPath, FileName
 | order by TimeGenerated desc
 ```
+<img width="1125" height="397" alt="TH Questions 09 and 10" src="https://github.com/user-attachments/assets/fc09c9ba-9843-48bd-b42d-05aaa4e2804e" />
 
 ## Discovery – Understanding the Environment
 Before moving further, the attacker gathered information about the environment.
