@@ -34,356 +34,431 @@ The attacker demonstrated structured, hands-on-keyboard activity consistent with
 
 # 3. Investigation Findings (With Context & KQL Evidence)
 
----
+## 1. Initial Access – How the Attacker Got In
+The compromise began on workstation as-pc1 when a fake CV file was run: daniel_richardson_cv.pdf.exe. This file was disguised to look like a normal PDF but was actually a program.
 
-# INITIAL ACCESS
+### KQL used to identify the first malicious file seen on the host:
 
-## 3.1 Initial Vector
-
-**Malicious Filename:**  
-`daniel_richardson_cv.pdf.exe`
-
-**What Happened:**  
-A file disguised as a PDF CV was actually an executable. The double file extension likely tricked the user into thinking it was a document rather than a program.
-
-**Execution Method:**  
-Launched by `explorer.exe`, meaning it was manually double-clicked.
-
-### KQL Used
-
-```kql
+```
 DeviceProcessEvents
 | where DeviceName == "as-pc1"
 | order by TimeGenerated asc
-| project TimeGenerated, AccountName, ActionType,
-          DeviceName, FileName, InitiatingProcessFileName
+| project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName
 ```
+The malicious file’s unique fingerprint (SHA256 hash) was:
 
----
+Initial payload hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
 
-## 3.2 Payload Hash
+KQL used to retrieve the hash of the payload initiated by the fake CV:
 
-**SHA256:**  
-`48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5`
-
-**What Happened:**  
-The file’s cryptographic hash uniquely identifies the malware. This same hash later reappears under a renamed binary, confirming the attacker reused the original payload for persistence.
-
-### KQL Used
-
-```kql
+text
 DeviceProcessEvents
 | where DeviceName == "as-pc1"
 | where InitiatingProcessFileName contains "daniel"
-| project TimeGenerated, FileName,
-          InitiatingProcessSHA256, SHA256
-```
+| order by TimeGenerated asc
+| project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
+The fake CV was launched from explorer.exe, which indicates a normal user double‑clicked the file in Windows Explorer (e.g., from the Desktop or Downloads).
 
----
-
-## 3.3 Suspicious Child Process
-
-**Spawned Process:**  
-`notepad.exe`
-
-**Command Line:**  
-`notepad.exe ""`
-
-**What Happened:**  
-The malware spawned a legitimate Windows process (Notepad). This is often done to inject malicious code into a trusted process to avoid detection.
-
-### KQL Used
-
-```kql
+text
 DeviceProcessEvents
 | where DeviceName == "as-pc1"
 | where InitiatingProcessFileName contains "daniel"
-| project TimeGenerated, FileName,
-          ProcessCommandLine
-```
+| order by TimeGenerated asc
+Once running, the malware spawned a built‑in Windows program, notepad.exe, as a child process. Using a legitimate program as a decoy can help attackers blend in.
 
----
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where InitiatingProcessFileName contains "daniel"
+| order by TimeGenerated asc
+| project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
+The suspicious notepad.exe instance ran with an unusual command line: notepad.exe "" (Notepad opened with an empty string). This suggests the process was likely used as a “host” or decoy, not for genuine text editing:
 
-# COMMAND & CONTROL
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where InitiatingProcessFileName contains "daniel"
+| order by TimeGenerated asc
 
-## 4.1 C2 Domain
+## 2. Command & Control – How the Attacker Phoned Home
+After gaining a foothold on as-pc1, the payload started talking to an attacker‑controlled server over the internet (command and control, or “C2”).
 
-**Domain:**  
-`cdn.cloud-endpoint.net`
+C2 domain used: cdn.cloud-endpoint.net
 
-**What Happened:**  
-After execution, the malware established outbound communication to an attacker-controlled domain. This allowed the attacker to send commands and receive results.
+KQL used to identify outbound connections related to the malicious CV process:
 
-### KQL Used
-
-```kql
+text
 DeviceNetworkEvents
 | where DeviceName == "as-pc1"
 | where InitiatingProcessFileName contains "daniel"
-| project TimeGenerated, RemoteUrl,
-          InitiatingProcessFileName
-```
+| project TimeGenerated, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName
+| order by TimeGenerated desc
+The process responsible for this network traffic was the same malicious file:
 
----
+C2 process: daniel_richardson_cv.pdf.exe
 
-## 4.2 Staging Domain
+(Same query as above.)
 
-**Domain:**  
-`sync.cloud-endpoint.net`
+The attacker also used separate infrastructure to host additional payloads, pivoting to another workstation as-pc2 and identifying:
 
-**What Happened:**  
-A secondary domain was used to host additional payloads and tools, indicating infrastructure prepared for extended operations.
+Payload staging domain: sync.cloud-endpoint.net
 
-### KQL Used
+KQL used on the second host:
 
-```kql
+text
 DeviceNetworkEvents
 | where DeviceName == "as-pc2"
-| project TimeGenerated, RemoteUrl,
-          InitiatingProcessFileName
-```
+| project TimeGenerated, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName
+| order by TimeGenerated desc
 
----
+## 3. Credential Access – Stealing Passwords and System Secrets
+The attacker attempted to steal sensitive system secrets from the local machine’s registry, which can be used to crack passwords offline.
 
-# CREDENTIAL ACCESS
+They used the Windows tool reg.exe with the save command to dump credential‑related hives:
 
-## 5.1 Registry Hive Dumping
+Registry hives targeted: system, sam
 
-**Hives Targeted:**  
-`SYSTEM`, `SAM`
+These two hives together allow an attacker to attempt extracting password hashes from the machine.
 
-**What Happened:**  
-The attacker used `reg.exe save` to export the SYSTEM and SAM registry hives. These contain password hashes and system key material required for offline password cracking.
-
-### KQL Used
-
-```kql
+text
 DeviceProcessEvents
 | where FileName =~ "reg.exe"
 | where ProcessCommandLine has "save"
-| where ProcessCommandLine has_any
-    ("HKLM\\SAM","HKLM\\SYSTEM")
-```
+| where ProcessCommandLine has_any ("HKLM\\SAM", "HKLM\\SECURITY", "HKLM\\SYSTEM")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+| order by TimeGenerated desc
+The stolen data was saved under a public directory on as-pc1 (local staging) before being sent out. The exact path was identified by focusing on new or modified files on the host:
 
----
+text
+DeviceFileEvents
+| where DeviceName == "as-pc1"
+| where ActionType in ("FileCreated", “FileCreatedOrModified")
+When we looked at where those files were written in the Public user directory, we saw that the actions were executed under:
 
-## 5.2 Credential Staging Location
+User performing the staging: sophie.turner
 
-**Directory:**  
-`C:\Users\Public\`
-
-**What Happened:**  
-The exported credential files were saved to a publicly writable directory commonly abused by attackers.
-
-### KQL Used
-
-```kql
+text
 DeviceFileEvents
 | where DeviceName == "as-pc1"
 | where FolderPath startswith @"C:\Users\Public\"
-```
+| where ActionType in ("FileCreated", "FileModified")
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName,
+         InitiatingProcessFileName, FolderPath, FileName
+| order by TimeGenerated desc
+
+## 4. Discovery – Understanding the Environment
+Before moving further, the attacker gathered information about the environment.
+
+They first confirmed which account they were running as, using the command:
+
+User context command: whoami
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where InitiatingProcessCommandLine contains “whoami"
+They then enumerated network resources (shared folders on the network) with:
+
+Network enumeration command: net.exe view
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where ProcessCommandLine contains "net"
+| project TimeGenerated, AccountName, InitiatingProcessCommandLine, ProcessCommandLine
+To understand which users had elevated rights, they queried local administrator group membership, targeting the Administrators group:
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where ProcessCommandLine has_any ("localgroup", "Administrators")
+| project TimeGenerated, DeviceName, AccountName,
+         InitiatingProcessFileName, ProcessCommandLine
+| order by TimeGenerated desc
+
+## 5. Persistence – Ensuring They Could Get Back In
+The attacker deployed a legitimate remote‑access tool (remote desktop/control software) to maintain ongoing access:
+
+Remote tool installed: AnyDesk.exe
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where ProcessCommandLine has_any ("anydesk", "teamviewer", "screenconnect", "connectwise", "splashtop", "logmein", "remote")
+| project Timestamp, DeviceName, AccountName,
+         FileName, ProcessCommandLine
+| order by Timestamp desc
+The hash of the AnyDesk binary was:
+
+Remote tool hash: f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where ProcessCommandLine has_any ("anydesk", "teamviewer", "screenconnect", "connectwise", "splashtop", "logmein", "remote")
+| project Timestamp, DeviceName, AccountName,
+         FileName, ProcessCommandLine, InitiatingProcessSHA256, SHA256
+| order by Timestamp desc
+To download this tool, they abused a built‑in Windows utility often misused by attackers:
+
+Download binary used: certutil.exe
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where FileName in~ ("certutil.exe","bitsadmin.exe","powershell.exe","curl.exe","mshta.exe")
+| where ProcessCommandLine has_any ("http","https","ftp")
+| project TimeGenerated, DeviceName, AccountName,
+         FileName, ProcessCommandLine
+| order by TimeGenerated desc
+After installation, the attacker accessed the AnyDesk configuration file, likely to set up unattended access:
+
+Configuration file path: C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf
+
+text
+DeviceProcessEvents
+| where FileName in~ ("cmd.exe","powershell.exe")
+| where ProcessCommandLine has @"AppData"
+| where ProcessCommandLine has_any ("type ","Get-Content","gc ","more ")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+| order by TimeGenerated desc
+Within this configuration activity, we see a password being set for unattended access:
+
+Configured unattended access password: intrud3r
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where ProcessCommandLine has_any ("password","pwd","pass","--pass","-p ")
+| project TimeGenerated, AccountDomain, AccountName, InitiatingProcessCommandLine
+AnyDesk was deployed broadly, giving the attacker remote access across multiple machines:
+
+Hosts with AnyDesk installed: as-pc1, as-pc2, as-srv
+
+text
+DeviceFileEvents
+| where ActionType == "FileCreated"
+| where FileName has_any ("AnyDesk")
+| project TimeGenerated, DeviceName, FileName, FolderPath
+| distinct DeviceName
+| order by DeviceName asc
+The attacker also created a dedicated backdoor local account for future logins:
+
+New local account created: svc_backup
 
----
+text
+DeviceProcessEvents
+| where FileName == "net.exe"
+| where ProcessCommandLine has_all ("user", "/add")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+| order by TimeGenerated desc
+To allow a previously disabled account to be used, they re‑enabled it using:
+
+Account activation parameter: /active:yes
+
+text
+DeviceProcessEvents
+| where FileName == "net.exe"
+| where ProcessCommandLine contains "/active:yes"
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+This action was performed by:
+
+User performing activation: david.mitchell
+
+(Same KQL as above, inspecting AccountName.)
+
+They created a scheduled task to keep a malicious program running regularly:
 
-## 5.3 Execution Identity
+Scheduled task name: MicrosoftEdgeUpdateCheck
 
-**User:**  
-`sophie.turner`
-
-**What Happened:**  
-The credential dumping was performed under this user context, meaning the attacker was operating interactively using her account.
-
----
-
-# DISCOVERY
-
-## 6.1 Identity Confirmation
-
-**Command:**  
-`whoami`
-
-**What Happened:**  
-The attacker verified which user account they were operating as.
-
----
-
-## 6.2 Share Enumeration
-
-**Command:**  
-`net.exe view`
-
-**What Happened:**  
-This command lists accessible network shares, helping the attacker identify file servers and data locations.
-
----
-
-## 6.3 Local Admin Enumeration
-
-**Group Queried:**  
-`Administrators`
-
-**What Happened:**  
-The attacker checked which accounts had local administrator privileges to plan lateral movement.
-
----
-
-# PERSISTENCE
-
-## 7.1 Remote Tool Deployment
-
-**Software:**  
-`AnyDesk.exe`
-
-**What Happened:**  
-A legitimate remote administration tool was installed to provide persistent remote access that blends in with legitimate IT software.
-
----
-
-## 7.2 Download Method
-
-**Binary Used:**  
-`certutil.exe`
-
-**What Happened:**  
-A native Windows tool was abused to download the remote access software, avoiding the need for custom downloaders.
-
----
-
-## 7.3 Scheduled Task
-
-**Task:**  
-`MicrosoftEdgeUpdateCheck`
-
-**What Happened:**  
-A scheduled task was created to execute malware automatically, ensuring it would persist after reboot.
-
----
-
-## 7.4 Renamed Payload
-
-**Filename:**  
-`RuntimeBroker.exe`
-
-**What Happened:**  
-The malware was renamed to resemble a legitimate Windows process, reducing suspicion.
-
----
-
-## 7.5 Backdoor Account
-
-**Account Created:**  
-`svc_backup`
-
-**What Happened:**  
-A new local account was created to guarantee future access even if other accounts were reset.
-
----
-
-# LATERAL MOVEMENT
-
-## 8.1 Failed Tools
-
-**Attempted:**  
-`WMIC.exe`, `PsExec.exe`
-
-**What Happened:**  
-The attacker initially attempted common administrative remote execution tools, which failed.
-
----
-
-## 8.2 Successful Pivot
-
-**Binary Used:**  
-`mstsc.exe`
-
-**What Happened:**  
-The attacker switched to Remote Desktop Protocol (RDP), successfully logging into another workstation.
-
----
-
-## 8.3 Movement Path
-
-**Path:**  
-`as-pc1 > as-pc2 > as-srv`
-
-**What Happened:**  
-The attacker progressively moved from a workstation to another workstation and then to a server, increasing impact potential.
-
----
-
-## 8.4 Compromised Account Used
-
-**Account:**  
-`david.mitchell`
-
-**What Happened:**  
-Valid credentials were used to authenticate during lateral movement, making activity appear legitimate.
-
----
-
-# DATA ACCESS & STAGING
-
-## 9.1 Sensitive File Accessed
-
-`BACS_Payments_Dec2025.ods`
-
-**What Happened:**  
-A payroll/financial spreadsheet was accessed on the file server.
-
----
-
-## 9.2 Editing Artifact
-
-`.~lock.BACS_Payments_Dec2025.ods#`
-
-**What Happened:**  
-The presence of this lock file confirms the document was opened for editing, not just previewed.
-
----
-
-## 9.3 Archive Creation
-
-**Archive:**  
-`Shares.7z`
-
-**SHA256:**  
-`6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048`
-
-**What Happened:**  
-Data was compressed into an archive, a common step before exfiltration to reduce size and simplify transfer.
-
----
-
-# DEFENSE EVASION
-
-## 10.1 Log Clearing
-
-**Logs Cleared:**  
-`System`, `Security`
-
-**What Happened:**  
-Event logs were deliberately cleared to remove evidence of malicious activity.
-
----
-
-## 10.2 Reflective Code Loading
-
-**ActionType:**  
-`ClrUnbackedModuleLoaded`
-
-**What Happened:**  
-A .NET assembly was loaded directly into memory without being written to disk, bypassing traditional file-based detection.
-
----
-
-## 10.3 Credential Theft Tool
-
-**Tool:**  
-`SharpChrome`  
-**Host Process:** `notepad.exe`
-
-**What Happened:**  
-A credential harvesting tool was injected into Notepad to steal browser-stored credentials while remaining hidden inside a legitimate process.
+text
+DeviceProcessEvents
+| where FileName == "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+| order by TimeGenerated desc
+The actual payload for this task was a renamed executable meant to look legitimate:
+
+Renamed persistence payload: RuntimeBroker.exe
+
+text
+DeviceProcessEvents
+| where FileName == "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| project TimeGenerated, DeviceName, ProcessCommandLine
+| order by TimeGenerated desc
+That RuntimeBroker.exe shared the same hash as the original malicious CV:
+
+Persistence payload hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+
+text
+DeviceFileEvents
+| where FileName == "RuntimeBroker.exe"
+| project TimeGenerated, DeviceName, FileName, SHA256
+
+## 6. Lateral Movement – Spreading to Other Systems
+The attacker tried several remote execution tools from as-pc1, but some attempts failed:
+
+Failed execution tools tried: WMIC.exe, PsExec.exe
+
+text
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where FileName has_any ("psexec.exe","wmic.exe","schtasks.exe","sc.exe","powershell.exe","winrm.cmd")
+| project TimeGenerated, DeviceName, AccountName,
+         FileName, ProcessCommandLine
+| order by TimeGenerated desc
+Those failed attempts targeted:
+
+Remote target in failed attempts: as-pc2
+(Identified from ProcessCommandLine using the same query as above.)
+
+Eventually, the attacker succeeded in moving laterally using Remote Desktop:
+
+Executable used for successful pivot: mstsc.exe (the standard Windows Remote Desktop client)
+
+text
+DeviceNetworkEvents
+| where DeviceName == "as-pc1"
+| where RemotePort == "3389"
+| project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, InitiatingProcessFileName
+By examining successful network connections across hosts, we see the full movement path:
+
+Lateral movement path: as-pc1 > as-pc2 > as-srv
+
+text
+DeviceNetworkEvents
+| where DeviceName has_any ("as-pc1", "as-pc2", "as-srv")
+| where ActionType == "ConnectionSuccess"
+| project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, InitiatingProcessFileName
+A valid user account was used for successful logons during this movement:
+
+Compromised account used for lateral movement: david.mitchell
+
+text
+DeviceLogonEvents
+| where DeviceName in ("as-pc1", "as-pc2")
+| project TimeGenerated, DeviceName, AccountName, ActionType
+| order by TimeGenerated asc
+
+## 7. Data Access & Exfiltration Preparation – What They Touched
+On the file server, the attacker accessed a sensitive finance‑related document:
+
+Sensitive document accessed: BACS_Payments_Dec2025.ods
+
+text
+DeviceFileEvents
+| where FileName has_any (".xlsx",".xls",".csv",".ods",".pdf")
+| where FileName has_any ("pay","payment","payroll","finance","invoice","bank","bacs")
+| project TimeGenerated, DeviceName, FileName, FolderPath
+| order by TimeGenerated desc
+An OpenDocument lock file showed that the document was opened in edit mode (not just read‑only):
+
+Evidence of modification/open for editing: .~lock.BACS_Payments_Dec2025.ods#
+
+text
+DeviceFileEvents
+| where FileName has_any (".xlsx",".xls",".csv",".ods",".pdf")
+| where FileName has_any ("pay","payment","payroll","finance","invoice","bank","bacs")
+| project TimeGenerated, ActionType, DeviceName, FileName
+The document was accessed from:
+
+Workstation that accessed the document: as-pc2
+(Identified from DeviceName using the same KQL as above.)
+
+Before exfiltration, the attacker bundled data into an archive:
+
+Archive filename: Shares.7z
+
+text
+DeviceFileEvents
+| where DeviceName in ("as-pc1", "as-pc2", "as-srv")
+| where ActionType == "FileCreated"
+| where FileName endswith ".zip"
+    or FileName endswith ".rar"
+    or FileName endswith ".7z"
+    or FileName endswith ".cab"
+| project TimeGenerated, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+The archive’s hash was:
+
+Archive hash: 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
+
+text
+DeviceFileEvents
+| where DeviceName in ("as-pc1", "as-pc2", "as-srv")
+| where ActionType == "FileCreated"
+| where FileName endswith ".zip"
+    or FileName endswith ".rar"
+    or FileName endswith ".7z"
+    or FileName endswith ".cab"
+| project TimeGenerated, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessSHA256
+| order by TimeGenerated desc
+
+## 8. Defense Evasion & In‑Memory Activity – Hiding Their Tracks
+To cover their tracks, the attacker cleared important Windows event logs:
+
+Logs cleared (examples): System, Security
+
+text
+DeviceProcessEvents
+| where FileName =~ "wevtutil.exe"
+| where ProcessCommandLine has " cl "
+| project TimeGenerated,
+          DeviceName,
+          InitiatingProcessAccountName,
+          ProcessCommandLine
+| order by TimeGenerated desc
+Telemetry also showed reflective loading, where code is loaded directly into memory rather than from disk, making it harder to detect:
+
+ActionType indicating reflective loading: ClrUnbackedModuleLoaded
+
+text
+DeviceEvents
+| where DeviceName in ("as-pc1", "as-pc2", "as-srv")
+| distinct ActionType
+Within those events, we identified a credential theft tool:
+
+In‑memory credential theft tool: SharpChrome
+(This is commonly used to steal saved passwords and cookies from the Chrome browser.)
+
+text
+DeviceEvents
+| where DeviceName in ("as-pc1", "as-pc2", "as-srv")
+| where ActionType == "ClrUnbackedModuleLoaded"
+| project TimeGenerated, ActionType, AdditionalFields
+The malicious assembly was hosted inside a legitimate Windows process:
+
+Host process for in‑memory tool: notepad.exe
+
+text
+DeviceEvents
+| where DeviceName in ("as-pc1", "as-pc2", "as-srv")
+| where ActionType == "ClrUnbackedModuleLoaded"
+| project TimeGenerated,
+          DeviceName,
+          InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+## 9. High-Level Narrative (Plain‑Language Summary)
+A user on as-pc1 opened a fake CV file (daniel_richardson_cv.pdf.exe), which was actually malware.
+
+That malware contacted remote domains (cdn.cloud-endpoint.net and sync.cloud-endpoint.net) controlled by the attacker and used Notepad in the background as a decoy.
+
+The attacker stole system secrets by dumping critical registry hives (system, sam) and staging those files locally under a user tied to sophie.turner.
+
+They then explored the network, checked their own identity (whoami), listed network shares (net.exe view), and looked at who had local admin rights (Administrators group).
+
+For persistence, they installed AnyDesk on several systems (as-pc1, as-pc2, as-srv), configured a password (intrud3r), re‑enabled a disabled account with /active:yes, created a new backdoor account svc_backup, and added a scheduled task (MicrosoftEdgeUpdateCheck) that ran a disguised copy of the original malware (RuntimeBroker.exe).
+
+They attempted various remote execution tools (WMIC.exe, PsExec.exe) against as-pc2, then successfully pivoted using Remote Desktop (mstsc.exe), ultimately moving along the path as-pc1 > as-pc2 > as-srv using the account david.mitchell.
+
+On the server, they accessed and edited a sensitive finance document (BACS_Payments_Dec2025.ods), then bundled data into an archive (Shares.7z) in preparation for exfiltration.
+
+Finally, they cleared key event logs (System, Security) and used an in‑memory tool (SharpChrome) injected into notepad.exe to steal browser‑stored credentials, making detection and forensics more difficult.
+
+This sequence confirms a full intrusion lifecycle on Ashford Sterling Recruitment’s environment: initial access, C2, credential theft, discovery, lateral movement, persistence, data access, and evidence tampering.
 
 ---
 
@@ -418,5 +493,9 @@ This was a deliberate, structured intrusion involving:
 - Log tampering
 
 The attacker achieved multi-system control and accessed sensitive payroll data.
+
+---
+
+# Remediation 
 
 Immediate containment, credential resets, endpoint rebuilds, and domain-wide security review are required.
