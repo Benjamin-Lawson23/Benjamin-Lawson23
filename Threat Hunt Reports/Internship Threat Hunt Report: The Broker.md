@@ -140,9 +140,11 @@ DeviceNetworkEvents
 ## Credential Access – Stealing Passwords and System Secrets
 The attacker attempted to steal sensitive system secrets from the local machine’s registry, which can be used to crack passwords offline.
 
-They used the Windows tool reg.exe with the save command to dump credential‑related hives:
+They used the Windows tool **reg.exe** with the ``save`` command to dump credential‑related hives:
 
-Registry hives targeted: system, sam
+**Registry hives targeted:**
+
+``system, sam``
 
 These two hives together allow an attacker to attempt extracting password hashes from the machine.
 
@@ -155,7 +157,7 @@ DeviceProcessEvents
 | order by TimeGenerated desc
 ```
 
-The stolen data was saved under a public directory on as-pc1 (local staging) before being sent out. The exact path was identified by focusing on new or modified files on the host:
+The stolen data was saved under a public directory on **as-pc1** (local staging) before being sent out. The exact path was identified by focusing on new or modified files on the host:
 
 ```
 DeviceFileEvents
@@ -163,9 +165,11 @@ DeviceFileEvents
 | where ActionType in ("FileCreated", “FileCreatedOrModified")
 ```
 
-When we looked at where those files were written in the Public user directory, we saw that the actions were executed under:
+When we looked at where those files were written in the **Public** user directory, we saw that the actions were executed under:
 
-User performing the staging: sophie.turner
+**User performing the staging:**
+
+``sophie.turner``
 
 ```
 DeviceFileEvents
