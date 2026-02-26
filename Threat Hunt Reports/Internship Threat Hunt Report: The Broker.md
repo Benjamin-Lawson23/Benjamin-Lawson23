@@ -111,6 +111,7 @@ DeviceNetworkEvents
 | project TimeGenerated, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName
 | order by TimeGenerated desc
 ```
+<img width="949" height="316" alt="TH Question 06" src="https://github.com/user-attachments/assets/bf1f9365-79f9-40de-8422-96798aab8dce" />
 
 The process responsible for this network traffic was the same malicious file:
 
@@ -134,6 +135,7 @@ DeviceNetworkEvents
 | project TimeGenerated, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName
 | order by TimeGenerated desc
 ```
+<img width="960" height="410" alt="TH Question 08" src="https://github.com/user-attachments/assets/999bc0e8-1a6b-427e-a491-1251396e1967" />
 
 ## Credential Access – Stealing Passwords and System Secrets
 The attacker attempted to steal sensitive system secrets from the local machine’s registry, which can be used to crack passwords offline.
