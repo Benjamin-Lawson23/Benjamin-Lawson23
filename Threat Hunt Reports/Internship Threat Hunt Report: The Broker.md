@@ -416,6 +416,8 @@ DeviceProcessEvents
          FileName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1246" height="73" alt="TH Questions 19 and 20" src="https://github.com/user-attachments/assets/ddbe59b5-3895-433a-ae64-6c90fbdbae28" />
+
 
 Those failed attempts targeted:
 
@@ -434,6 +436,7 @@ DeviceNetworkEvents
 | where RemotePort == "3389"
 | project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, InitiatingProcessFileName
 ```
+<img width="1035" height="301" alt="TH Question 21" src="https://github.com/user-attachments/assets/5533095f-46c8-4cb5-9a35-1f1f20fccbb7" />
 
 By examining successful network connections across hosts, we see the full movement path:
 
@@ -447,6 +450,7 @@ DeviceNetworkEvents
 | where ActionType == "ConnectionSuccess"
 | project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, InitiatingProcessFileName
 ```
+<img width="991" height="178" alt="TH Question 22" src="https://github.com/user-attachments/assets/19afc3f2-4836-4839-bbb3-a1f1990df8c4" />
 
 A valid user account was used for successful logons during this movement:
 
@@ -460,12 +464,15 @@ DeviceLogonEvents
 | project TimeGenerated, DeviceName, AccountName, ActionType
 | order by TimeGenerated asc
 ```
-
+<img width="758" height="200" alt="TH Question 23" src="https://github.com/user-attachments/assets/feff9a6a-7f66-4cba-915c-a384cf320246" />
 
 ## Data Access & Exfiltration Preparation – What They Touched
+
 On the file server, the attacker accessed a sensitive finance‑related document:
 
-Sensitive document accessed: BACS_Payments_Dec2025.ods
+**Sensitive document accessed:**
+
+``BACS_Payments_Dec2025.ods``
 
 ```
 DeviceFileEvents
@@ -474,10 +481,13 @@ DeviceFileEvents
 | project TimeGenerated, DeviceName, FileName, FolderPath
 | order by TimeGenerated desc
 ```
+<img width="991" height="362" alt="TH Question 30" src="https://github.com/user-attachments/assets/ca1486e8-4981-4cbe-8844-0325ff59fbe5" />
 
 An OpenDocument lock file showed that the document was opened in edit mode (not just read‑only):
 
-Evidence of modification/open for editing: .~lock.BACS_Payments_Dec2025.ods#
+**Evidence of modification/open for editing:** 
+
+``.~lock.BACS_Payments_Dec2025.ods#``
 
 ```
 DeviceFileEvents
@@ -485,15 +495,20 @@ DeviceFileEvents
 | where FileName has_any ("pay","payment","payroll","finance","invoice","bank","bacs")
 | project TimeGenerated, ActionType, DeviceName, FileName
 ```
+<img width="926" height="60" alt="TH Question 33" src="https://github.com/user-attachments/assets/698cae42-d650-4ca2-8830-bceec975dc64" />
 
 The document was accessed from:
 
-Workstation that accessed the document: as-pc2
+**Workstation that accessed the document:** ``as-pc2``
 (Identified from DeviceName using the same KQL as above.)
+
+<img width="813" height="37" alt="TH Question 34" src="https://github.com/user-attachments/assets/ec270e74-6d90-4ff4-95dc-dabe62071ff4" />
 
 Before exfiltration, the attacker bundled data into an archive:
 
-Archive filename: Shares.7z
+**Archive filename:**
+
+``Shares.7z``
 
 ```
 DeviceFileEvents
@@ -506,10 +521,13 @@ DeviceFileEvents
 | project TimeGenerated, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1169" height="418" alt="TH Question 35" src="https://github.com/user-attachments/assets/fcd0a415-79d8-403b-8bdb-c469492effee" />
 
 The archive’s hash was:
 
-Archive hash: 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
+**Archive hash:**
+
+``6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048``
 
 ```
 DeviceFileEvents
@@ -522,11 +540,14 @@ DeviceFileEvents
 | project TimeGenerated, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessSHA256
 | order by TimeGenerated desc
 ```
+<img width="1032" height="165" alt="TH Question 36" src="https://github.com/user-attachments/assets/e45d8f2f-507e-4fcb-9b56-bcb6d725e183" />
 
 ## Defense Evasion & In‑Memory Activity – Hiding Their Tracks
 To cover their tracks, the attacker cleared important Windows event logs:
 
-Logs cleared (examples): System, Security
+**Logs cleared (examples):**
+
+``System, Security``
 
 ```
 DeviceProcessEvents
@@ -538,20 +559,24 @@ DeviceProcessEvents
           ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="877" height="390" alt="TH Question 37" src="https://github.com/user-attachments/assets/bfb039a8-280e-4ed7-875b-af1074193dc7" />
 
-Telemetry also showed reflective loading, where code is loaded directly into memory rather than from disk, making it harder to detect:
+Telemetry also showed **reflective loading**, where code is loaded directly into memory rather than from disk, making it harder to detect:
 
-ActionType indicating reflective loading: ClrUnbackedModuleLoaded
+**ActionType indicating reflective loading:**
+
+``ClrUnbackedModuleLoaded``
 
 ```
 DeviceEvents
 | where DeviceName in ("as-pc1", "as-pc2", "as-srv")
 | distinct ActionType
 ```
+<img width="1014" height="356" alt="TH Question 38" src="https://github.com/user-attachments/assets/b472d3b0-776c-401e-87eb-f302f54aed45" />
 
 Within those events, we identified a credential theft tool:
 
-In‑memory credential theft tool: SharpChrome
+**In‑memory credential theft tool:** ``SharpChrome``
 (This is commonly used to steal saved passwords and cookies from the Chrome browser.)
 
 ```
@@ -560,10 +585,13 @@ DeviceEvents
 | where ActionType == "ClrUnbackedModuleLoaded"
 | project TimeGenerated, ActionType, AdditionalFields
 ```
+<img width="1024" height="398" alt="TH Question 39" src="https://github.com/user-attachments/assets/e00883d2-bdd1-4bdc-8bf2-a44aea86c9d4" />
 
 The malicious assembly was hosted inside a legitimate Windows process:
 
-Host process for in‑memory tool: notepad.exe
+**Host process for in‑memory tool:**
+
+``notepad.exe``
 
 ```
 DeviceEvents
@@ -575,6 +603,8 @@ DeviceEvents
           InitiatingProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1025" height="298" alt="TH Question 40" src="https://github.com/user-attachments/assets/4cb17bba-b27c-410b-8ee6-83a0316435fd" />
+
 ---
 
 # 4. High-Level Summary
