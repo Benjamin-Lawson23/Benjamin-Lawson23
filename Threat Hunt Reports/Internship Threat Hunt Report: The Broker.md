@@ -80,7 +80,7 @@ DeviceProcessEvents
 | project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
 ```
 
-The suspicious notepad.exe instance ran with an unusual command line: notepad.exe "" (Notepad opened with an empty string). This suggests the process was likely used as a “host” or decoy, not for genuine text editing:
+The suspicious ``notepad.exe`` instance ran with an unusual command line: ``notepad.exe ""`` (Notepad opened with an empty string). This suggests the process was likely used as a “host” or decoy, not for genuine text editing:
 
 ```
 DeviceProcessEvents
