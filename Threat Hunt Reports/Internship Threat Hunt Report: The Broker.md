@@ -121,6 +121,8 @@ The process responsible for this network traffic was the same malicious file:
 
 (Same query as above.)
 
+<img width="965" height="126" alt="TH Question 07" src="https://github.com/user-attachments/assets/3d7b4f01-88e2-4343-8da7-1512c8af737b" />
+
 The attacker also used separate infrastructure to host additional payloads, pivoting to another workstation **as-pc2** and identifying:
 
 **Payload staging domain:**
