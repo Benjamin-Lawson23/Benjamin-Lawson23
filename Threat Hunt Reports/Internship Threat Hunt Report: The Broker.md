@@ -401,9 +401,12 @@ DeviceFileEvents
 <img width="1060" height="307" alt="TH Question 28" src="https://github.com/user-attachments/assets/fdb49382-64a8-4412-999b-f227887ad441" />
 
 ## Lateral Movement – Spreading to Other Systems
+
 The attacker tried several remote execution tools from as-pc1, but some attempts failed:
 
-Failed execution tools tried: WMIC.exe, PsExec.exe
+**Failed execution tools tried:**
+
+``WMIC.exe, PsExec.exe``
 
 ```
 DeviceProcessEvents
@@ -416,12 +419,14 @@ DeviceProcessEvents
 
 Those failed attempts targeted:
 
-Remote target in failed attempts: as-pc2
-(Identified from ProcessCommandLine using the same query as above.)
+**Remote target in failed attempts:** ``as-pc2``
+(Identified from ``ProcessCommandLine`` using the same query as above.)
 
-Eventually, the attacker succeeded in moving laterally using Remote Desktop:
+Eventually, the attacker succeeded in moving laterally using **Remote Desktop**:
 
-Executable used for successful pivot: mstsc.exe (the standard Windows Remote Desktop client)
+**Executable used for successful pivot:**
+
+``mstsc.exe`` (the standard Windows Remote Desktop client)
 
 ```
 DeviceNetworkEvents
@@ -432,7 +437,9 @@ DeviceNetworkEvents
 
 By examining successful network connections across hosts, we see the full movement path:
 
-Lateral movement path: as-pc1 > as-pc2 > as-srv
+**Lateral movement path:** 
+
+``as-pc1 > as-pc2 > as-srv``
 
 ```
 DeviceNetworkEvents
@@ -443,7 +450,9 @@ DeviceNetworkEvents
 
 A valid user account was used for successful logons during this movement:
 
-Compromised account used for lateral movement: david.mitchell
+**Compromised account used for lateral movement:**
+
+``david.mitchell``
 
 ```
 DeviceLogonEvents
