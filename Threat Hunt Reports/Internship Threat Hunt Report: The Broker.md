@@ -507,6 +507,7 @@ DeviceEvents
 ---
 
 # 4. High-Level Summary
+
 A user on as-pc1 opened a fake CV file (daniel_richardson_cv.pdf.exe), which was actually malware.
 
 That malware contacted remote domains (cdn.cloud-endpoint.net and sync.cloud-endpoint.net) controlled by the attacker and used Notepad in the background as a decoy.
