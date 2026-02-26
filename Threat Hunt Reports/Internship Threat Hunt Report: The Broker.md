@@ -37,7 +37,7 @@ The attacker demonstrated structured, hands-on-keyboard activity consistent with
 ## Initial Access – How the Attacker Got In
 The compromise began on workstation **as-pc1** when a fake CV file was run: ``daniel_richardson_cv.pdf.exe``. This file was disguised to look like a normal PDF but was actually a program.
 
-### KQL used to identify the first malicious file seen on the host:
+KQL used to identify the first malicious file seen on the host:
 
 ```
 DeviceProcessEvents
@@ -45,6 +45,8 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 | project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName
 ```
+<img width="1234" height="428" alt="TH Question 01" src="https://github.com/user-attachments/assets/da7729f1-1920-4a0c-ab86-54d34d491c9b" />
+
 The malicious file’s unique fingerprint (SHA256 hash) was:
 
 **Initial payload hash:** 
