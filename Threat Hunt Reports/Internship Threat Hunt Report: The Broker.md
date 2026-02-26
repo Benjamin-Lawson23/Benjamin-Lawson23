@@ -542,7 +542,7 @@ This sequence confirms a full intrusion lifecycle on Ashford Sterling Recruitmen
 
 ---
 
-# Final Assessment
+# Overall Assessment
 
 This was a deliberate, structured intrusion involving:
 
