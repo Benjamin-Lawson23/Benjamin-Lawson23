@@ -228,7 +228,9 @@ DeviceProcessEvents
 ## Persistence – Ensuring They Could Get Back In
 The attacker deployed a legitimate remote‑access tool (remote desktop/control software) to maintain ongoing access:
 
-Remote tool installed: AnyDesk.exe
+**Remote tool installed:**
+
+``AnyDesk.exe``
 
 ```
 DeviceProcessEvents
@@ -238,10 +240,13 @@ DeviceProcessEvents
          FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
+<img width="1238" height="204" alt="TH Question 14" src="https://github.com/user-attachments/assets/f288b180-4711-43a3-ba85-217c0b185194" />
 
-The hash of the AnyDesk binary was:
+The **hash** of the AnyDesk binary was:
 
-Remote tool hash: f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
+**Remote tool hash:**
+
+``f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532``
 
 ```
 DeviceProcessEvents
@@ -254,7 +259,9 @@ DeviceProcessEvents
 
 To download this tool, they abused a built‑in Windows utility often misused by attackers:
 
-Download binary used: certutil.exe
+**Download binary used:**
+
+``certutil.exe``
 
 ```
 DeviceProcessEvents
@@ -265,10 +272,13 @@ DeviceProcessEvents
          FileName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1251" height="364" alt="TH Question 15" src="https://github.com/user-attachments/assets/c1b7b9ed-c436-4770-9a28-0cd8c5ea2d6f" />
 
 After installation, the attacker accessed the AnyDesk configuration file, likely to set up unattended access:
 
-Configuration file path: C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf
+**Configuration file path:**
+
+``C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf``
 
 ```
 DeviceProcessEvents
@@ -278,10 +288,13 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1089" height="312" alt="TH Question 16" src="https://github.com/user-attachments/assets/a2a817ae-e067-4c0b-84c9-5b16e9a5ee94" />
 
 Within this configuration activity, we see a password being set for unattended access:
 
-Configured unattended access password: intrud3r
+**Configured unattended access password:**
+
+``intrud3r``
 
 ```
 DeviceProcessEvents
@@ -289,9 +302,13 @@ DeviceProcessEvents
 | where ProcessCommandLine has_any ("password","pwd","pass","--pass","-p ")
 | project TimeGenerated, AccountDomain, AccountName, InitiatingProcessCommandLine
 ```
+<img width="1063" height="109" alt="TH Question 17" src="https://github.com/user-attachments/assets/b2757cb2-0216-4847-8c9d-d3ff14683153" />
+
 AnyDesk was deployed broadly, giving the attacker remote access across multiple machines:
 
-Hosts with AnyDesk installed: as-pc1, as-pc2, as-srv
+**Hosts with AnyDesk installed:**
+
+``as-pc1, as-pc2, as-srv``
 
 ```
 DeviceFileEvents
@@ -301,10 +318,13 @@ DeviceFileEvents
 | distinct DeviceName
 | order by DeviceName asc
 ```
+<img width="722" height="384" alt="TH Question 18" src="https://github.com/user-attachments/assets/8729e351-d135-42ae-9f48-47bbe40b43d9" />
 
-The attacker also created a dedicated backdoor local account for future logins:
+The attacker also created a dedicated **backdoor local account** for future logins:
 
-New local account created: svc_backup
+**New local account created:** 
+
+``svc_backup``
 
 ```
 DeviceProcessEvents
@@ -313,10 +333,13 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="868" height="308" alt="TH Question 29" src="https://github.com/user-attachments/assets/330c7253-3d93-4fae-9f4c-ddb360caf19f" />
 
 To allow a previously disabled account to be used, they re‑enabled it using:
 
-Account activation parameter: /active:yes
+**Account activation parameter:**
+
+``/active:yes``
 
 ```
 DeviceProcessEvents
@@ -324,16 +347,21 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "/active:yes"
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 ```
+<img width="864" height="348" alt="TH Question 24 and 25" src="https://github.com/user-attachments/assets/008cd26f-8f23-4249-a92e-5f656bff0147" />
 
 This action was performed by:
 
-User performing activation: david.mitchell
+**User performing activation:**
 
-(Same KQL as above, inspecting AccountName.)
+``david.mitchell``
+
+(Same KQL as above, inspecting ``AccountName``.)
 
 They created a scheduled task to keep a malicious program running regularly:
 
-Scheduled task name: MicrosoftEdgeUpdateCheck
+**Scheduled task name:**
+
+``MicrosoftEdgeUpdateCheck``
 
 ```
 DeviceProcessEvents
@@ -342,10 +370,13 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1248" height="379" alt="TH Question 26" src="https://github.com/user-attachments/assets/d0360b5f-ea94-4668-9162-576acececd0d" />
 
 The actual payload for this task was a renamed executable meant to look legitimate:
 
-Renamed persistence payload: RuntimeBroker.exe
+**Renamed persistence payload:**
+
+``RuntimeBroker.exe``
 
 ```
 DeviceProcessEvents
@@ -354,16 +385,20 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, ProcessCommandLine
 | order by TimeGenerated desc
 ```
+<img width="1094" height="394" alt="TH Question 27" src="https://github.com/user-attachments/assets/23995c8a-a9e5-4537-8a8d-381fb3b8edfa" />
 
-That RuntimeBroker.exe shared the same hash as the original malicious CV:
+That ``RuntimeBroker.exe`` shared the same hash as the original malicious CV:
 
-Persistence payload hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+**Persistence payload hash:**
+
+``48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5``
 
 ```
 DeviceFileEvents
 | where FileName == "RuntimeBroker.exe"
 | project TimeGenerated, DeviceName, FileName, SHA256
 ```
+<img width="1060" height="307" alt="TH Question 28" src="https://github.com/user-attachments/assets/fdb49382-64a8-4412-999b-f227887ad441" />
 
 ## Lateral Movement – Spreading to Other Systems
 The attacker tried several remote execution tools from as-pc1, but some attempts failed:
