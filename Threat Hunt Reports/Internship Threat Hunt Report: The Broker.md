@@ -62,6 +62,7 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 | project TimeGenerated, AccountName, ActionType, DeviceName, FileName, InitiatingProcessFileName, InitiatingProcessSHA256, SHA256
 ```
+<img width="1204" height="431" alt="TH Question 02" src="https://github.com/user-attachments/assets/7a7b02c1-8f99-42f5-8665-57ba2a791525" />
 
 The fake CV was launched from **explorer.exe**, which indicates a normal user double‑clicked the file in Windows Explorer (e.g., from the Desktop or Downloads).
 
