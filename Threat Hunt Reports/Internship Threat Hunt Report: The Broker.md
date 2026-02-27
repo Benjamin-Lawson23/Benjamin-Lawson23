@@ -158,6 +158,8 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 | order by TimeGenerated desc
 ```
+<img width="961" height="386" alt="Screenshot 2026-02-26 at 6 34 16 PM" src="https://github.com/user-attachments/assets/1310afac-a452-4ba9-b6e5-ec7c35eb896d" />
+
 
 
 The stolen data was saved under a public directory on **as-pc1** (local staging) before being sent out. The exact path was identified by focusing on new or modified files on the host:
