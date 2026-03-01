@@ -4,6 +4,9 @@
 
 - [Vulnerability Program Implementation](https://github.com/Benjamin-Lawson23/vulnerability-management-program-implementation/blob/main/README.md)
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
+  - [Remediation 1]
+  - [Remediation 2]
+  - [Remediation 3]
 
 <h2>🕵️‍♂️ Threat Hunting and Security Operations Projects</h2>
 
