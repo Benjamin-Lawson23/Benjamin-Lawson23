@@ -4,7 +4,7 @@
 
 - [Vulnerability Program Implementation](https://github.com/Benjamin-Lawson23/vulnerability-management-program-implementation/blob/main/README.md)
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
-  - [Remediation 1]
+  - [Remediation 1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000040.ps1)
   - [Remediation 2]
   - [Remediation 3]
 
