@@ -4,7 +4,7 @@
 
 - [Vulnerability Program Implementation](https://github.com/Benjamin-Lawson23/vulnerability-management-program-implementation/blob/main/README.md)
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
-  - [Password Complexity Requirement WN10-AC-000040.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000040.ps1)
+  - [Password Complexity Requirement](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000040.ps1)
   - [WN10-AC-000030.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000030.ps1)
   - [WN10-AC-000020.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000020.ps1)
 
