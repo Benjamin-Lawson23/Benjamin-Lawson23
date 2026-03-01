@@ -6,7 +6,7 @@
 - <b>Programmatic Vulnerability Remediations (PowerShell and Bash)</b>
   - [WN10-AC-000040.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000040.ps1)
   - [WN10-AC-000030.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000030.ps1)
-  - [WN10-AC-000020](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000020.ps1)
+  - [WN10-AC-000020.ps1](https://github.com/Benjamin-Lawson23/Benjamin-Lawson23/blob/main/STIGS/WN10-AC-000020.ps1)
 
 <h2>🕵️‍♂️ Threat Hunting and Security Operations Projects</h2>
 
